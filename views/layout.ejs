@@ -16,6 +16,7 @@
     <link rel="SHORTCUT ICON" href="./favicon.ico" />
     <script src="./X-admin/lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="./X-admin/js/xadmin.js"></script>
+    <script type="text/javascript" src="./javascripts/index.js"></script>
     <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
     <!--[if lt IE 9]>
           <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
@@ -62,13 +63,11 @@
         </ul>
         <ul class="layui-nav right" lay-filter="">
             <li class="layui-nav-item">
-                <a href="javascript:;">admin</a>
+                <a href="javascript:;"><%= adminInfo.phone %></a>
                 <dl class="layui-nav-child">
                     <!-- 二级菜单 -->
                     <dd>
-                        <a onclick="xadmin.open('个人信息','http://www.baidu.com')">个人信息</a></dd>
-                    <dd>
-                        <a href="./X-admin/login.html">退出</a></dd>
+                        <a onclick="logout()" href="javascript:;">退出</a></dd>
                 </dl>
             </li>
         </ul>
@@ -86,7 +85,7 @@
                         <i class="iconfont nav_right">&#xe697;</i></a>
                     <ul class="sub-menu">
                         <li>
-                            <a onclick="xadmin.add_tab('管理员列表','admin-list.html')">
+                            <a onclick="xadmin.add_tab('管理员列表','admin')">
                                 <i class="iconfont">&#xe6a7;</i>
                                 <cite>管理员列表</cite></a>
                         </li>
@@ -346,6 +345,15 @@
     <!-- 右侧主体结束 -->
     <!-- 中部结束 -->
     <script>
+    function logout() {
+        layer.confirm('确定退出登录？', {
+            btn: ['确定退出', '取消'] //按钮
+        }, function() {
+            $post('admin/logout', '').then((res) => {
+                location.reload()
+            }).catch(err => {})
+        }, function() {});
+    }
     </script>
 </body>
 

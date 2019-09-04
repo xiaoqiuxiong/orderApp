@@ -12,10 +12,6 @@ let admin = sequelize.define('admin', {
     // 密码
     password: {
         type: Sequelize.STRING()
-    },
-    // token
-    token: {
-        type: Sequelize.STRING()
     }
 }, {
     freezeTableName: true

@@ -3,6 +3,7 @@ const adminModel = require('../../database/models/admin')
 const bcrypt = require('bcrypt')
 const passport = require('koa-passport')
 const config = require('../../config')
+let Op = require('sequelize').Op
 
 // 判断方法
 function isEmpty(obj) {
@@ -14,7 +15,7 @@ function isEmpty(obj) {
 }
 
 
-router.prefix('/adminApi')
+router.prefix('/adminApi/admin')
 // 新增管理员
 router.post('/add', async ctx => {
     let req = ctx.request.body
@@ -73,7 +74,7 @@ router.post('/add', async ctx => {
 // 管理员登陆
 router.post('/login', async ctx => {
     let req = ctx.request.body
-    if (req.username.toString().length != 11) {
+    if (!(/^1[3456789]\d{9}$/.test(req.username))) {
         ctx.body = {
             code: 1,
             msg: '请正确输入手机号码'
@@ -93,7 +94,7 @@ router.post('/login', async ctx => {
             let adminInfo = admin
             ctx.cookies.set('token', new Buffer(JSON.stringify(adminInfo)).toString('base64'), { maxAge: 1000 * 60 * 60 * 24 })
             adminInfo.password = null
-            ctx.cookies.set('adminInfo', JSON.stringify(adminInfo), { maxAge: 1000 * 60 * 60 * 24 })
+            ctx.cookies.set('adminInfo', JSON.stringify({ id: adminInfo.id, phone: adminInfo.phone }), { maxAge: 1000 * 60 * 60 * 24 })
             ctx.body = {
                 code: 0,
                 msg: info,
@@ -107,6 +108,35 @@ router.post('/login', async ctx => {
         }
         ctx.login(admin)
     })(ctx)
+})
+
+// 管理员登陆
+router.post('/logout', async ctx => {
+    ctx.logout()
+    ctx.body = {
+        code: 0,
+        msg: '已经退出登录'
+    }
+})
+
+// 管理员列表
+router.post('/list', async ctx => {
+    let req = ctx.request.body
+    const admins = await adminModel.findAll({
+        where: {
+            createdAt: {
+                // [Op.gte]: new Date(new Date() - 24 * 60 * 60 * 1000),
+                [Op.lte]: new Date()
+            },
+            // phone: 17512053075
+        }
+    });
+    console.log(admins);
+    ctx.body = {
+        code: 0,
+        msg: 'success',
+        data: admins
+    }
 })
 
 module.exports = router

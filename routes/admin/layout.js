@@ -3,7 +3,7 @@ const config = require('../../config.js')
 
 // 布局
 router.get('/', async (ctx, next) => {
-    await ctx.render('layout',{APPNAME: config.APPNAME});
+    await ctx.render('layout',{APPNAME: config.APPNAME,adminInfo: ctx.adminInfo});
 })
 
 module.exports = router
