@@ -10,6 +10,8 @@ let config = {
     },
     // 密码加盐强度
     SALT_WORK_FACTOR: 10,
-    KEY: 'xiaoqiuxiong'
+    KEY: 'xiaoqiuxiong',
+    // 七牛云域名前缀
+    QNBASEPATH: 'http://pxefy5rqa.bkt.clouddn.com/'
 };
 module.exports = config;

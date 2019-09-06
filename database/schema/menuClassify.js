@@ -1,16 +1,18 @@
-// 管理员表
+// 菜单分类表
 const Sequelize = require('sequelize'),
     sequelize = require('../index'),
     moment = require('moment'),
-    admin = sequelize.define('admin', {
-        // 手机号
-        phone: {
+    config = require('../../config'),
+    menuClassify = sequelize.define('menuClassify', {
+        // 分类名称
+        name: {
             type: Sequelize.STRING(),
             unique: true
         },
-        // 密码
-        password: {
-            type: Sequelize.STRING()
+        // 分类图标
+        icon: {
+            type: Sequelize.STRING(),
+            default: `${config}menu_default.png`           
         },
         // 创建时间
         createdAt: {
@@ -31,4 +33,4 @@ const Sequelize = require('sequelize'),
         freezeTableName: true
     });
 
-module.exports = admin;
+module.exports = menuClassify;

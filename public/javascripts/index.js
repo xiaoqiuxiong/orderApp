@@ -10,7 +10,7 @@ function $get(url, params='') {
                     resolve(res)
                 } else {
                     layer.msg(res.msg)
-                    reject('请求错误信息:' + res.msg)
+                    reject(res.msg)
                 }
             },
             error(err) {
@@ -39,7 +39,7 @@ function $post(url, params='') {
                     resolve(res)
                 } else {
                     layer.msg(res.msg)
-                    reject('请求错误信息:' + res.msg)
+                    reject(res.msg)
                 }
             },
             error(err) {

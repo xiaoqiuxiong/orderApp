@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt')
 const passport = require('koa-passport')
 const config = require('../../config')
 let Op = require('sequelize').Op
+const moment = require('moment')
+let Sequelize = require('sequelize');
 
 // 判断方法
 function isEmpty(obj) {
@@ -120,22 +122,31 @@ router.post('/logout', async ctx => {
 })
 
 // 管理员列表
-router.post('/list', async ctx => {
-    let req = ctx.request.body
-    const admins = await adminModel.findAll({
-        where: {
-            createdAt: {
-                // [Op.gte]: new Date(new Date() - 24 * 60 * 60 * 1000),
-                [Op.lte]: new Date()
-            },
-            // phone: 17512053075
-        }
-    });
-    console.log(admins);
+router.get('/list', async ctx => {
+    let req = ctx.request.query,
+        phone = req.phone,
+        start = req.time ? moment(new Date(req.time.split('~')[0])).utcOffset(0).format('YYYY-MM-DD HH:mm:ss') : '',
+        end = req.time ? moment(new Date(req.time.split('~')[1])).utcOffset(24 * 60).format('YYYY-MM-DD HH:mm:ss') : '',
+        countPerPage = parseInt(req.limit) || 10,
+        currentPage = parseInt(req.page) || 1;
+    const admins = await adminModel.findAndCountAll({
+        attributes: { exclude: ['password', 'updatedAt'] },
+        limit: countPerPage,
+        offset: countPerPage * (currentPage - 1),
+        where: Sequelize.and(
+            start ? {
+                createdAt: {
+                    [Op.between]: [start, end]
+                }
+            } : null,
+            phone ? { phone } : null
+        )
+    })
     ctx.body = {
         code: 0,
         msg: 'success',
-        data: admins
+        count: admins.count,
+        rows: admins.rows
     }
 })
 

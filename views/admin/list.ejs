@@ -3,12 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>欢迎页面-X-admin2.2</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" />
     <link rel="stylesheet" href="./X-admin/css/font.css">
     <link rel="stylesheet" href="./X-admin/css/xadmin.css">
+    <link rel="stylesheet" href="./stylesheets/style.css">
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     <script src="./X-admin/lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="./X-admin/js/xadmin.js"></script>
@@ -21,10 +21,7 @@
 <body>
     <div class="x-nav">
         <span class="layui-breadcrumb">
-            <a href="">首页</a>
-            <a href="">演示</a>
-            <a>
-                <cite>导航元素</cite></a>
+            <a><cite>欢迎使用</cite></a>
         </span>
         <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
             <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i></a>
@@ -34,81 +31,20 @@
             <div class="layui-col-md12">
                 <div class="layui-card">
                     <div class="layui-card-body ">
-                        <form class="layui-form layui-col-space5">
+                        <form id="form" class="layui-form layui-col-space5">
                             <div class="layui-inline layui-show-xs-block">
-                                <input class="layui-input" autocomplete="off" placeholder="开始日" name="start" id="start">
+                                <input type="text" class="layui-input" name="time" id="timeSelect" readonly placeholder="请选择日期">
                             </div>
                             <div class="layui-inline layui-show-xs-block">
-                                <input class="layui-input" autocomplete="off" placeholder="截止日" name="end" id="end">
+                                <input type="text" name="phone" placeholder="请输入手机号" autocomplete="off" class="layui-input">
                             </div>
                             <div class="layui-inline layui-show-xs-block">
-                                <input type="text" name="username" placeholder="请输入用户名" autocomplete="off" class="layui-input">
-                            </div>
-                            <div class="layui-inline layui-show-xs-block">
-                                <button class="layui-btn" lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+                                <button class="layui-btn" lay-submit lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
                             </div>
                         </form>
                     </div>
-                    <div onclick="getList()">666666666666</div>
-                    <div class="layui-card-header">
-                        <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
-                        <button class="layui-btn" onclick="xadmin.open('添加用户','./admin-add.html',600,400)"><i class="layui-icon"></i>添加</button>
-                    </div>
                     <div class="layui-card-body ">
-                        <table class="layui-table layui-form">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <input type="checkbox" name="" lay-skin="primary">
-                                    </th>
-                                    <th>ID</th>
-                                    <th>登录名</th>
-                                    <th>手机</th>
-                                    <th>邮箱</th>
-                                    <th>角色</th>
-                                    <th>加入时间</th>
-                                    <th>状态</th>
-                                    <th>操作</th>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="" lay-skin="primary">
-                                    </td>
-                                    <td>1</td>
-                                    <td>admin</td>
-                                    <td>18925139194</td>
-                                    <td>113664000@qq.com</td>
-                                    <td>超级管理员</td>
-                                    <td>2017-01-01 11:11:42</td>
-                                    <td class="td-status">
-                                        <span class="layui-btn layui-btn-normal layui-btn-mini">已启用</span></td>
-                                    <td class="td-manage">
-                                        <a onclick="member_stop(this,'10001')" href="javascript:;" title="启用">
-                                            <i class="layui-icon">&#xe601;</i>
-                                        </a>
-                                        <a title="编辑" onclick="xadmin.open('编辑','admin-edit.html')" href="javascript:;">
-                                            <i class="layui-icon">&#xe642;</i>
-                                        </a>
-                                        <a title="删除" onclick="member_del(this,'要删除的id')" href="javascript:;">
-                                            <i class="layui-icon">&#xe640;</i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="layui-card-body ">
-                        <div class="page">
-                            <div>
-                                <a class="prev" href="">&lt;&lt;</a>
-                                <a class="num" href="">1</a>
-                                <span class="current">2</span>
-                                <a class="num" href="">3</a>
-                                <a class="num" href="">489</a>
-                                <a class="next" href="">&gt;&gt;</a>
-                            </div>
-                        </div>
+                        <table class="layui-table layui-form layui-hide" lay-filter="tableFilter" id="table"></table>
                     </div>
                 </div>
             </div>
@@ -116,28 +52,109 @@
     </div>
 </body>
 <script type="text/javascript" src="./javascripts/index.js"></script>
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+    <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+    <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
+    <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+  </div>
+</script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
 <script>
 $(function() {
-    layui.use(['laydate', 'form', 'layer'], function() {
-        var laydate = layui.laydate;
-        var form = layui.form;
-        var layer = layui.layer;
+    layui.use(['laydate', 'form', 'layer', 'table'], function() {
+        var laydate = layui.laydate,
+            form = layui.form,
+            layer = layui.layer,
+            table = layui.table;
         //执行一个laydate实例
         laydate.render({
-            elem: '#start' //指定元素
+            elem: '#timeSelect',
+            range: '~'
+        })
+        let tableRender = table.render({
+            elem: '#table',
+            url: 'adminApi/admin/list',
+            response: {
+                statusName: 'code',
+                statusCode: 0,
+                msgName: 'msg',
+                countName: 'count',
+                dataName: 'rows'
+            },
+            toolbar: 'default',
+            cellMinWidth: 40,
+            cols: [
+                [
+                    { type: 'checkbox', fixed: 'left' },
+                    { field: 'id', title: '用户ID', width: 80 },
+                    { field: 'phone', title: '手机号码', width: 200 },
+                    { field: 'createdAt', title: '加入时间', minWidth: 160 },
+                    { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 140 }
+                ]
+            ],
+            page: true
         });
 
-        //执行一个laydate实例
-        laydate.render({
-            elem: '#end' //指定元素
+        //头工具栏事件
+        table.on('toolbar(test)', function(obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'getCheckData':
+                    var data = checkStatus.data;
+                    layer.alert(JSON.stringify(data));
+                    break;
+                case 'getCheckLength':
+                    var data = checkStatus.data;
+                    layer.msg('选中了：' + data.length + ' 个');
+                    break;
+                case 'isAll':
+                    layer.msg(checkStatus.isAll ? '全选' : '未全选');
+                    break;
+            };
         });
-        getList()
+
+        //监听行工具事件
+        table.on('tool(test)', function(obj) {
+            var data = obj.data;
+            //console.log(obj)
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function(index) {
+                    obj.del();
+                    layer.close(index);
+                });
+            } else if (obj.event === 'edit') {
+                layer.prompt({
+                    formType: 2,
+                    value: data.email
+                }, function(value, index) {
+                    obj.update({
+                        email: value
+                    });
+                    layer.close(index);
+                });
+            }
+        });
+        form.on('submit(sreach)', data => {
+            tableRender.reload({
+                where: { 
+                    phone: data.field.phone,
+                    time: data.field.time
+                },
+                page: {
+                    curr: 1
+                }
+            });
+            return false;
+        });
     });
-
 })
 
 function getList() {
-    $post('admin/list', { phone: '' }, layer).then(res => {
+    $post('admin/list', { phone: '', start: '', end: '' }, layer).then(res => {
         console.log(res)
     }).catch(err => {
         console.log(err)
