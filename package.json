@@ -9,7 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "compose": "^0.1.2",
     "debug": "^4.1.1",
     "ejs": "~2.3.3",
